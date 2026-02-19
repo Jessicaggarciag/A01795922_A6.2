@@ -7,10 +7,9 @@ import os
 import sys
 import json
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-
-from hotel import Hotel
+from src.hotel import Hotel  # Importación corregida para la estructura de paquetes
 
 class TestHotel(unittest.TestCase):
     """Clase de pruebas para validar la funcionalidad de Hotel."""
@@ -84,7 +83,28 @@ class TestHotel(unittest.TestCase):
         # El original debe permanecer sin cambios
         hotels = Hotel.load_hotels(self.test_file)
         self.assertEqual(hotels[0].name, "Original")
+    
+    def test_modify_hotel_success(self):
+        """Caso Positivo: Verifica la modificación de datos de un hotel."""
+        Hotel.create_hotel(1, "Original", "Mérida", 10, self.test_file)
+        # Esto cubrirá las líneas 54-57
+        Hotel.modify_hotel(1, self.test_file, name="Modificado", rooms=20)
+        hotels = Hotel.load_hotels(self.test_file)
+        self.assertEqual(hotels[0].name, "Modificado")
+        self.assertEqual(hotels[0].rooms, 20)
 
+    def test_cancel_reservation_logic(self):
+        """Caso Positivo: Verifica que cancelar reserva aumente los cuartos."""
+        hotel = Hotel(1, "Test", "Lugar", 5)
+        # Esto cubrirá las líneas 71-72
+        hotel.cancel_reservation(self.test_file)
+        self.assertEqual(hotel.rooms, 6)
+
+    def test_display_hotel_not_found(self):
+        """Caso Negativo: Mostrar un hotel que no existe."""
+        # Esto cubrirá las líneas 45-46
+        result = Hotel.display_hotel(999, self.test_file)
+        self.assertIsNone(result)
 
 if __name__ == '__main__':
     unittest.main()
