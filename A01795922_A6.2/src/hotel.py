@@ -18,10 +18,19 @@ class Hotel:
         return self.__dict__
 
     @classmethod
-    def create_hotel(cls, hotel_id, name, location, rooms, filename):
-        """Crea un hotel y lo guarda en el archivo JSON."""
+    def create_hotel(cls, hotel_data, filename):
+        """
+        Crea un hotel y lo guarda en el archivo JSON (Req 2a).
+        hotel_data debe ser un diccionario con las llaves necesarias.
+        """
         hotels = cls.load_hotels(filename)
-        new_hotel = cls(hotel_id, name, location, rooms)
+        # Extraemos los datos del diccionario para crear la instancia
+        new_hotel = cls(
+            hotel_data['hotel_id'],
+            hotel_data['name'],
+            hotel_data['location'],
+            hotel_data['rooms']
+        )
         hotels.append(new_hotel)
         cls.save_to_file(filename, hotels)
         return new_hotel
@@ -35,12 +44,13 @@ class Hotel:
 
     @staticmethod
     def display_hotel(hotel_id, filename):
-        """Muestra la información de un hotel específico."""
+        """Muestra la información de un hotel (Req 2c)."""
         hotels = Hotel.load_hotels(filename)
         for hotel in hotels:
             if hotel.hotel_id == hotel_id:
-                print(f"ID: {hotel.hotel_id} | Nombre: {hotel.name} "
-                      f"| Ubicación: {hotel.location} | Cuartos: {hotel.rooms}")
+                # Rompemos la línea en el '|' para que mida menos de 79 ch
+                print(f"ID: {hotel.hotel_id} | Nombre: {hotel.name} | "
+                      f"Ubicación: {hotel.location} | Cuartos: {hotel.rooms}")
                 return hotel
         print("Hotel no encontrado.")
         return None
