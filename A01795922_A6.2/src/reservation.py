@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 """Módulo para la gestión de reservaciones"""
 import json
 import os
